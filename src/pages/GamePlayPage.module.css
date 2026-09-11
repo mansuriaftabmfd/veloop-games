@@ -233,10 +233,34 @@
 }
 
 .bladeInstruction {
-  margin: 22px 0 0;
+  margin: 18px 0 0;
   color: var(--clr-muted);
   font-weight: 700;
   font-size: 0.88rem;
+}
+
+.readyBladeContainer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.readyBlade {
+  filter: drop-shadow(0 4px 14px rgba(255, 107, 53, 0.45));
+  animation: bladeFloat 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes bladeFloat {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-4px); }
+}
+
+.readyBladeSvg {
+  width: 34px;
+  height: 68px;
+  display: block;
 }
 
 /* ── NUTCRAFT ── */

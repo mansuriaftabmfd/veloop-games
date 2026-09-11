@@ -272,11 +272,8 @@ export default function BladeMaster({ onFinish }) {
               </filter>
             </defs>
 
-            {/* Rotating group containing target face and all embedded knives */}
-            <g
-              transform={`rotate(${rotation}, 160, 160)`}
-              style={{ transformOrigin: '160px 160px' }}
-            >
+            {/* Rotating group containing target face and all embedded knives - spins strictly on center (160, 160) */}
+            <g transform={`rotate(${rotation} 160 160)`}>
               {/* Outer Wood Rim */}
               <circle cx="160" cy="160" r="154" fill="url(#woodRim)" filter="url(#woodShadow)" stroke="#231303" strokeWidth="4" />
               <circle cx="160" cy="160" r="148" fill="none" stroke="#794614" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.6" />
@@ -306,7 +303,6 @@ export default function BladeMaster({ onFinish }) {
                 <g
                   key={k.id}
                   transform={`translate(${k.boardX}, ${k.boardY}) rotate(${k.angleDeg - 90})`}
-                  style={{ transformOrigin: '0 0' }}
                 >
                   {/* Blade Tip embedded in target */}
                   <polygon points="0,0 -4,12 4,12" fill="#e0e0e0" stroke="#757575" strokeWidth="0.8" />
@@ -331,8 +327,27 @@ export default function BladeMaster({ onFinish }) {
           </svg>
         </div>
 
+        {/* Ready blade at bottom aiming up at target (like darts reference) */}
+        <div className={styles.readyBladeContainer} aria-hidden="true">
+          <div className={styles.readyBlade}>
+            <svg viewBox="0 0 36 72" className={styles.readyBladeSvg}>
+              {/* Blade tip */}
+              <polygon points="18,0 10,22 26,22" fill="#ffffff" stroke="#94a3b8" strokeWidth="1" />
+              {/* Blade body */}
+              <rect x="11" y="22" width="14" height="24" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1" />
+              <line x1="18" y1="4" x2="18" y2="44" stroke="#ffffff" strokeWidth="1.5" />
+              {/* Golden Guard */}
+              <rect x="3" y="46" width="30" height="5" rx="2" fill="#f59e0b" stroke="#b45309" strokeWidth="1" />
+              {/* Grip */}
+              <rect x="12" y="51" width="12" height="15" rx="2" fill="#5c2c16" stroke="#2e1307" strokeWidth="1" />
+              {/* Pommel */}
+              <circle cx="18" cy="69" r="3.5" fill="#f59e0b" stroke="#b45309" strokeWidth="1" />
+            </svg>
+          </div>
+        </div>
+
         <p className={styles.bladeInstruction}>
-          🎯 Click or tap anywhere on the spinning target to throw your knife
+          🎯 Click or tap anywhere on the spinning target to throw your blade!
         </p>
       </div>
 
