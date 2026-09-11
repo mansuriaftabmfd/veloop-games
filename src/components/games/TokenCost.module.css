@@ -1,0 +1,37 @@
+.cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: rgba(247, 201, 72, 0.12);
+  border: 1px solid rgba(247, 201, 72, 0.28);
+  border-radius: var(--r-pill);
+  width: fit-content;
+  max-width: max-content;
+  align-self: flex-start;
+  flex-shrink: 0;
+}
+
+.cost img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.cost span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--clr-gold);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.compact {
+  padding: 4px 8px;
+}
+
+/* Text fallback when image not available */
+.tokenEmoji {
+  font-size: 0.85rem;
+  line-height: 1;
+}

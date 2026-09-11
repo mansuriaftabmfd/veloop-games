@@ -1,0 +1,55 @@
+.track {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 12px 0 24px;
+  overscroll-behavior-inline: contain;
+  touch-action: pan-x pan-y;
+  outline: none;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.track.isDragging {
+  cursor: grabbing !important;
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+}
+
+.track::-webkit-scrollbar { display: none; }
+
+.track:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  border-radius: var(--r-md);
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  .track {
+    gap: 16px;
+    padding: 10px 0 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 767px) {
+  .track {
+    gap: 0;
+    padding: 4px 0 16px;
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+  }
+}

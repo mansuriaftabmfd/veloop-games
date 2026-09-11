@@ -1,0 +1,301 @@
+/* ── CARD ── */
+.card {
+  flex: 0 0 clamp(280px, 24vw, 340px);
+  scroll-snap-align: start;
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--accent, #FF6B35), transparent 45%);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px color-mix(in srgb, var(--accent, #FF6B35), transparent 55%),
+    0 0 35px color-mix(in srgb, var(--accent, #FF6B35), transparent 75%);
+}
+
+/* ── ARTWORK (Strict aspect ratio + absolute image so cards never mismatch) ── */
+.artworkWrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--clr-card-2);
+  overflow: hidden;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.artworkWrap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.5s ease;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.artworkWrap img.loaded { opacity: 1; }
+.card:hover .artworkWrap img { transform: scale(1.05); }
+
+/* Bottom gradient overlay */
+.artworkOverlay {
+  position: absolute;
+  inset: 40% 0 0;
+  background: linear-gradient(to bottom, transparent, rgba(13, 14, 26, 0.9));
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Skeleton loader */
+.skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    var(--clr-card) 28%,
+    var(--clr-card-2) 42%,
+    var(--clr-card) 58%
+  );
+  background-size: 240% 100%;
+  animation: skeletonPulse 1.6s linear infinite;
+}
+@keyframes skeletonPulse { to { background-position: -240% 0; } }
+
+/* Fallback */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--clr-card-2);
+  font-size: 3rem;
+  color: var(--clr-muted);
+}
+
+/* Top meta: category + badge */
+.topMeta {
+  position: absolute;
+  inset: 12px 12px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.category {
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(13, 14, 26, 0.75);
+  backdrop-filter: blur(12px);
+  color: var(--clr-muted);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--clr-border);
+}
+
+.badge {
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 107, 53, 0.25);
+  backdrop-filter: blur(12px);
+  color: #FF8C60;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  border: 1px solid rgba(255, 107, 53, 0.35);
+}
+
+/* LIVE / COMING SOON badge */
+.statusBadge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+}
+.live {
+  background: rgba(0, 245, 160, 0.16);
+  border: 1px solid rgba(0, 245, 160, 0.38);
+  color: #00F5A0;
+}
+.soon {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-muted);
+}
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00F5A0;
+  display: inline-block;
+  animation: livePulse 1.5s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* Coming soon frosted overlay */
+.comingSoonOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(13, 14, 26, 0.6);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.card:hover .comingSoonOverlay { opacity: 1; }
+
+.lockIcon { font-size: 1.8rem; }
+.comingSoonOverlay span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--clr-muted);
+  letter-spacing: 0.12em;
+}
+
+/* ── ACTION AREA ── */
+.actionArea {
+  height: 82px;
+  flex-shrink: 0;
+  padding: 0 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  background: linear-gradient(180deg, var(--clr-card), var(--clr-surface));
+  border-top: 1px solid var(--clr-border);
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.gameInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.actionArea h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--clr-text);
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* ── TABLET BREAKPOINT (768px - 1199px) ── */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .card {
+    flex: 0 0 clamp(280px, 36vw, 350px);
+  }
+  .artworkWrap {
+    aspect-ratio: 16 / 10;
+  }
+  .actionArea {
+    height: 82px;
+  }
+}
+
+/* ── MOBILE BREAKPOINT (< 768px) ── */
+@media (max-width: 767px) {
+  .card {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+    border-radius: 20px;
+  }
+
+  .artworkWrap {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .actionArea {
+    height: auto;
+    min-height: 112px;
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .gameInfo {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .actionArea h3 {
+    font-size: clamp(0.95rem, 4vw, 1.05rem);
+    max-width: 60%;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .artworkWrap img,
+  .skeleton { transition: none; animation: none; }
+}

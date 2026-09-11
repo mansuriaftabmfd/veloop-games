@@ -1,0 +1,52 @@
+.dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  margin-top: 1.4rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dots button {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  border-radius: var(--r-pill);
+  padding: 0;
+  background: var(--clr-faint);
+  cursor: pointer;
+  transition: width 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.dots button:hover {
+  background: var(--clr-muted);
+  transform: scale(1.2);
+}
+
+.dots button.active {
+  width: 26px;
+  background: var(--grad-primary);
+  box-shadow: 0 0 12px rgba(255, 90, 34, 0.5);
+}
+
+@media (max-width: 767px) {
+  .dots {
+    gap: 5px;
+    margin-top: 1rem;
+    padding: 0 8px;
+  }
+  .dots button {
+    width: 6px;
+    height: 6px;
+  }
+  .dots button.active {
+    width: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots button { transition: none; }
+}

@@ -1,0 +1,108 @@
+.button {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--r-md);
+  padding: 0.65rem 1.05rem;
+  min-width: 116px;
+  background: var(--grad-primary);
+  color: white;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.86rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow:
+    0 6px 20px rgba(255, 90, 34, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    opacity 0.22s ease;
+}
+
+/* Shimmer sweep */
+.shimmer {
+  position: absolute;
+  inset: -50% auto -50% -55%;
+  width: 38%;
+  transform: skewX(-22deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: shimmer 2.2s linear infinite;
+  pointer-events: none;
+}
+@keyframes shimmer {
+  from { left: -55%; }
+  to   { left: 130%; }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.arrow {
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 12px 28px rgba(255, 60, 172, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.25);
+}
+.button:hover:not(:disabled) .arrow {
+  transform: translateX(4px);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Disabled — not enough tokens */
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--clr-card-2);
+  box-shadow: none;
+}
+.button:disabled .shimmer { display: none; }
+
+/* Locked — coming soon */
+.locked {
+  background: var(--clr-card-2);
+  box-shadow: none;
+  cursor: default;
+}
+.locked .shimmer { display: none; }
+.locked:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 575px) {
+  .button {
+    width: 100%;
+    min-width: 100%;
+    padding: 0.72rem 1rem;
+    font-size: 0.88rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer { animation: none; }
+  .button, .arrow { transition: none; }
+}

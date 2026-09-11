@@ -1,0 +1,104 @@
+/* ── DESIGN TOKENS ─────────────────────────────── */
+:root {
+  /* Font */
+  font-family: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  /* Color palette */
+  --clr-bg:         #0D0E1A;
+  --clr-surface:    #13152A;
+  --clr-card:       #1A1D35;
+  --clr-card-2:     #1E213B;
+  --clr-border:     rgba(255, 255, 255, 0.08);
+  --clr-border-hi:  rgba(255, 255, 255, 0.16);
+
+  /* Gradient brand */
+  --grad-primary:   linear-gradient(135deg, #FF6B35, #FF3CAC);
+  --grad-neon:      linear-gradient(135deg, #00F5A0, #00D9F5);
+  --grad-gold:      linear-gradient(135deg, #F7C948, #FF9900);
+  --grad-purple:    linear-gradient(135deg, #8B5CF6, #6366F1);
+
+  /* Solid accents */
+  --clr-primary:    #FF5A22;
+  --clr-pink:       #FF3CAC;
+  --clr-neon:       #00F5A0;
+  --clr-gold:       #F7C948;
+  --clr-purple:     #8B5CF6;
+
+  /* Text */
+  --clr-text:       #F0F1FF;
+  --clr-muted:      #8A8FAF;
+  --clr-faint:      #5A5F7D;
+
+  /* Radius */
+  --r-sm:   10px;
+  --r-md:   16px;
+  --r-lg:   22px;
+  --r-xl:   30px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --shadow-card:   0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-glow:   0 0 30px rgba(255, 90, 34, 0.25);
+  --shadow-neon:   0 0 24px rgba(0, 245, 160, 0.3);
+}
+
+/* ── RESET ─────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ─────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--clr-surface); }
+::-webkit-scrollbar-thumb { background: var(--clr-card-2); border-radius: var(--r-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--clr-faint); }
+
+/* ── FOCUS ─────────────────────────────── */
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--clr-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── SELECTION ─────────────────────────────── */
+::selection { background: rgba(255, 90, 34, 0.3); color: var(--clr-text); }
+
+/* ── REDUCED MOTION ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
