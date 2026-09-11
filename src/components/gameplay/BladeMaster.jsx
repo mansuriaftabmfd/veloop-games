@@ -1,3 +1,4 @@
+// VELOOP Rewards — Blade Master (Centered Target & Ready Blade v1.1)
 import { useEffect, useRef, useState } from 'react'
 import { sound } from '../../utils/audio.js'
 import styles from '../../pages/GamePlayPage.module.css'
