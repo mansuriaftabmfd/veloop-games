@@ -53,6 +53,9 @@ export default function FeaturedHero({ game }) {
       <div className={styles.bottomContent}>
         <div className={styles.titleArea}>
           <h2 className={styles.gameTitle}>{game.name}</h2>
+          {game.description && (
+            <p className={styles.gameDesc}>{game.description}</p>
+          )}
           <div className={styles.metaRow}>
             <span className={styles.tokenPill}>🪙 {game.cost} Tokens</span>
             {best > 0 && (

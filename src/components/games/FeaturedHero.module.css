@@ -205,6 +205,19 @@
   text-overflow: ellipsis;
 }
 
+.gameDesc {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 560px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .metaRow {
   display: flex;
   align-items: center;
@@ -339,6 +352,12 @@
 
   .gameTitle {
     font-size: 1.65rem;
+  }
+
+  .gameDesc {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
   }
 
   .playBtn {

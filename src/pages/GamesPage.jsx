@@ -92,11 +92,25 @@ export default function GamesPage() {
         <FeaturedHero game={featured} />
 
         {/* ── CATEGORY FILTER ── */}
-        <div className={styles.filterSection}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.sectionTitleIcon}>🎮</span>
-            Explore Games
-          </h2>
+        <div id="explore-games" className={styles.filterSection}>
+          <div className={styles.filterHeader}>
+            <h2 className={styles.sectionTitle}>
+              <span className={styles.sectionTitleIcon}>🎮</span>
+              Explore Games
+            </h2>
+            <button
+              type="button"
+              className={styles.browseAllBtn}
+              onClick={() => {
+                setCategory('All')
+                const el = document.getElementById('explore-games')
+                if (el) el.scrollIntoView({ behavior: 'smooth' })
+              }}
+              title="Show all games"
+            >
+              Browse All Games →
+            </button>
+          </div>
           <CategoryFilter games={games} active={category} onChange={setCategory} />
         </div>
 

@@ -64,9 +64,36 @@ export default function GamePlayPage() {
 
   if (!game?.playable) {
     return (
-      <div className={styles.invalid}>
-        This game is not enabled in the playable prototype.
-      </div>
+      <main className={styles.page}>
+        <div className={styles.shell}>
+          <GameHeader backTo="/games" />
+          <div className={styles.fallbackCard}>
+            <span className={styles.fallbackIcon} aria-hidden="true">🔒</span>
+            <h2>{game ? `${game.name} is Coming Soon` : 'Game Not Found'}</h2>
+            <p>
+              {game
+                ? `${game.name} is currently in development. Experience Blade Master or Nutcraft in the meantime!`
+                : 'The game you requested does not exist or has been moved.'}
+            </p>
+            <div className={styles.fallbackActions}>
+              <button
+                type="button"
+                className={styles.fallbackBtn}
+                onClick={() => navigate('/games')}
+              >
+                ← Explore Games
+              </button>
+              <button
+                type="button"
+                className={`${styles.fallbackBtn} ${styles.primaryBtn}`}
+                onClick={() => navigate('/games/blade-master/play')}
+              >
+                🗡️ Play Blade Master →
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     )
   }
 

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import games from '../data/gamesData.js'
 import { useGameEconomy } from '../context/GameEconomyContext.jsx'
@@ -14,6 +14,7 @@ import styles from './GameHomePage.module.css'
 export default function GameHomePage() {
   const { slug } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const game = useMemo(() => games.find((item) => item.slug === slug), [slug])
 
@@ -23,6 +24,28 @@ export default function GameHomePage() {
   const [requiredGuide, setRequiredGuide] = useState(false)
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState('warn') // 'warn' | 'error'
+
+  const earned = location.state?.earned
+  const [showEarnedBanner, setShowEarnedBanner] = useState(!!earned)
+
+  // Auto-dismiss earned notification
+  useEffect(() => {
+    if (earned) {
+      const t = setTimeout(() => setShowEarnedBanner(false), 6500)
+      return () => clearTimeout(t)
+    }
+  }, [earned])
+
+  // Keyboard shortcut: Escape to close guide
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape' && guideOpen && !requiredGuide) {
+        setGuideOpen(false)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [guideOpen, requiredGuide])
 
   const bestScore = game ? getBestScore(game.slug) : 0
 
