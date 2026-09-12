@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import GameCard from './GameCard.jsx'
 import CarouselDots from './CarouselDots.jsx'
 import styles from './GamesCarousel.module.css'
 
-export default function GamesCarousel({ games }) {
+export default function GamesCarousel({ games, category = 'All' }) {
+  // Carousel marquee is ONLY active for the 'All' category
+  const isCarousel = category === 'All' && games.length > 0
+
   const trackRef = useRef(null)
   const pausedRef = useRef(false)
   const isPointerDownRef = useRef(false)
@@ -13,6 +16,7 @@ export default function GamesCarousel({ games }) {
   const hasMovedRef = useRef(false)
   const pauseTimeoutRef = useRef(null)
   const rafRef = useRef(null)
+  const scrollPosRef = useRef(0)
 
   const [active, setActive] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -31,75 +35,113 @@ export default function GamesCarousel({ games }) {
 
   const getStepWidth = () => {
     const track = trackRef.current
-    if (!track) return 300
+    if (!track) return 320
     const first = track.querySelector('[data-game-card]')
-    if (!first) return 300
-    const gap = parseFloat(getComputedStyle(track).gap || '0')
-    return first.getBoundingClientRect().width + gap
+    if (!first) return 320
+    const gap = parseFloat(getComputedStyle(track).gap || '20')
+    const width = first.getBoundingClientRect().width
+    return (width > 0 ? width : 300) + (isNaN(gap) ? 20 : gap)
   }
 
   const scrollToGame = (index) => {
     const track = trackRef.current
     if (!track) return
+    pauseAutoScroll(4500)
     const step = getStepWidth()
-    track.scrollTo({ left: index * step, behavior: 'smooth' })
+    const targetScroll = index * step
+    track.scrollTo({ left: targetScroll, behavior: 'smooth' })
+    scrollPosRef.current = targetScroll
     setActive(index)
     activeRef.current = index
   }
 
-  // Auto-scroll loop: slide-by-slide on mobile (<768px), continuous marquee on desktop
+  // When games <= 3 (e.g. Strategy with 2 games): each game is rendered ONCE, no duplicates.
+  // When games > 3 (e.g. All with 12 games): duplicated for seamless infinite marquee.
+  const displayGames = useMemo(() => {
+    if (!games || games.length === 0) return []
+    if (!isCarousel) {
+      return games.map((g) => ({
+        game: g,
+        uniqueKey: String(g.id),
+        isOriginal: true,
+      }))
+    }
+    const repeatCount = games.length <= 5 ? 3 : 2
+    const list = []
+    for (let r = 0; r < repeatCount; r++) {
+      for (let i = 0; i < games.length; i++) {
+        list.push({
+          game: games[i],
+          uniqueKey: `${games[i].id}-rep${r}-idx${i}`,
+          isOriginal: r === 0,
+        })
+      }
+    }
+    return list
+  }, [games, isCarousel])
+
+  // Continuous marquee on desktop ONLY when isCarousel is true
   useEffect(() => {
     const track = trackRef.current
-    if (!track) return
+    if (!track || !games || games.length === 0) return
+
+    track.scrollLeft = 0
+    scrollPosRef.current = 0
+    setActive(0)
+    activeRef.current = 0
+
+    if (!isCarousel) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) return
-
-    const isMobile = window.matchMedia('(max-width: 767px)').matches
-
-    if (isMobile) {
-      const interval = setInterval(() => {
-        if (pausedRef.current || isPointerDownRef.current || !trackRef.current) return
-        const next = (activeRef.current + 1) % games.length
-        scrollToGame(next)
-      }, 3200)
-      return () => clearInterval(interval)
-    }
 
     let previous = performance.now()
     const tick = (now) => {
       const dt = Math.min(32, now - previous)
       previous = now
+
       if (!pausedRef.current && !isPointerDownRef.current && trackRef.current) {
-        trackRef.current.scrollLeft += dt * 0.032
-        const half = trackRef.current.scrollWidth / 2
-        if (trackRef.current.scrollLeft >= half) {
-          trackRef.current.scrollLeft -= half
+        const step = getStepWidth()
+        const cycleWidth = games.length * step
+
+        scrollPosRef.current += dt * 0.038
+
+        if (cycleWidth > 0 && scrollPosRef.current >= cycleWidth) {
+          scrollPosRef.current -= cycleWidth
         }
+
+        trackRef.current.scrollLeft = scrollPosRef.current
+      } else if (trackRef.current) {
+        scrollPosRef.current = trackRef.current.scrollLeft
       }
+
       rafRef.current = requestAnimationFrame(tick)
     }
+
     rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [games.length])
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [games, isCarousel])
 
   // Track scroll event to update active dot indicator
   const handleScroll = () => {
     const track = trackRef.current
-    if (!track) return
+    if (!track || !isCarousel || games.length === 0) return
     const step = getStepWidth()
     if (step <= 0) return
     const current = Math.round(track.scrollLeft / step) % games.length
-    if (current !== activeRef.current) {
+    if (current !== activeRef.current && current >= 0 && current < games.length) {
       setActive(current)
       activeRef.current = current
     }
   }
 
-  // Keyboard navigation
+  // Keyboard navigation (only for carousel)
   useEffect(() => {
+    if (!isCarousel) return
     const handleKey = (e) => {
-      if (!trackRef.current) return
+      if (!trackRef.current || games.length === 0) return
       if (e.key === 'ArrowRight') {
         pauseAutoScroll(4000)
         scrollToGame((activeRef.current + 1) % games.length)
@@ -110,11 +152,11 @@ export default function GamesCarousel({ games }) {
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [games.length])
+  }, [games, isCarousel])
 
-  // ── MOUSE POINTER DRAG (For Desktop & Emulators) ──
+  // ── MOUSE POINTER DRAG (only for carousel) ──
   const handlePointerDown = (e) => {
-    // Only handle mouse dragging with left click; let touch use native high-performance scroll
+    if (!isCarousel) return
     if (e.pointerType === 'touch') {
       pauseAutoScroll(4000)
       return
@@ -133,7 +175,7 @@ export default function GamesCarousel({ games }) {
   }
 
   const handlePointerMove = (e) => {
-    if (!isPointerDownRef.current) return
+    if (!isCarousel || !isPointerDownRef.current) return
     const track = trackRef.current
     if (!track) return
 
@@ -141,24 +183,31 @@ export default function GamesCarousel({ games }) {
     if (Math.abs(dx) > 6) {
       hasMovedRef.current = true
     }
-    track.scrollLeft = scrollStartLeftRef.current - dx
+    const newLeft = scrollStartLeftRef.current - dx
+    track.scrollLeft = newLeft
+    scrollPosRef.current = newLeft
   }
 
   const handlePointerUp = () => {
-    if (!isPointerDownRef.current) return
+    if (!isCarousel || !isPointerDownRef.current) return
     isPointerDownRef.current = false
     setIsDragging(false)
 
     const track = trackRef.current
-    if (track && hasMovedRef.current) {
+    if (track && hasMovedRef.current && games.length > 0) {
       const step = getStepWidth()
       if (step > 0) {
-        const target = Math.round(track.scrollLeft / step) % games.length
+        const cycleWidth = games.length * step
+        let normalized = track.scrollLeft
+        if (cycleWidth > 0 && normalized >= cycleWidth) {
+          normalized = normalized % cycleWidth
+        }
+        const target = Math.round(normalized / step) % games.length
         scrollToGame(target)
       }
     }
 
-    pauseAutoScroll(3000)
+    pauseAutoScroll(3500)
   }
 
   // Prevent card click when user was dragging
@@ -170,32 +219,44 @@ export default function GamesCarousel({ games }) {
     }
   }
 
+  const handleMouseEnter = () => {
+    if (isCarousel) pausedRef.current = true
+  }
+
+  const handleMouseLeave = () => {
+    if (isCarousel && !isPointerDownRef.current) {
+      pausedRef.current = false
+    }
+  }
+
   return (
     <>
       <div
         ref={trackRef}
-        className={`${styles.track} ${isDragging ? styles.isDragging : ''}`}
-        onScroll={handleScroll}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
-        onTouchStart={() => pauseAutoScroll(4000)}
-        onTouchEnd={() => pauseAutoScroll(3000)}
+        className={`${styles.track} ${!isCarousel ? styles.staticTrack : ''} ${isDragging ? styles.isDragging : ''}`}
+        onScroll={isCarousel ? handleScroll : undefined}
+        onPointerDown={isCarousel ? handlePointerDown : undefined}
+        onPointerMove={isCarousel ? handlePointerMove : undefined}
+        onPointerUp={isCarousel ? handlePointerUp : undefined}
+        onPointerCancel={isCarousel ? handlePointerUp : undefined}
+        onMouseEnter={isCarousel ? handleMouseEnter : undefined}
+        onMouseLeave={isCarousel ? handleMouseLeave : undefined}
+        onTouchStart={isCarousel ? () => pauseAutoScroll(4000) : undefined}
+        onTouchEnd={isCarousel ? () => pauseAutoScroll(3000) : undefined}
         onClickCapture={handleClickCapture}
-        aria-label="Games carousel — swipe, scroll or drag with your hand"
+        aria-label="Games collection"
         tabIndex={0}
         role="region"
       >
-        {[...games, ...games].map((game, index) => (
+        {displayGames.map((item) => (
           <GameCard
-            key={`${game.id}-${index}`}
-            game={game}
-            ariaHidden={index >= games.length ? 'true' : undefined}
+            key={item.uniqueKey}
+            game={item.game}
+            ariaHidden={!item.isOriginal ? 'true' : undefined}
           />
         ))}
       </div>
-      <CarouselDots count={games.length} active={active} onSelect={scrollToGame} />
+      {isCarousel && <CarouselDots count={games.length} active={active} onSelect={scrollToGame} />}
     </>
   )
 }

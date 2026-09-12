@@ -69,11 +69,6 @@ export default function GameCard({ game, ariaHidden }) {
           )}
         </div>
 
-        {/* Game title overlay on artwork */}
-        <div className={styles.artworkTitle}>
-          <h3>{game.name}</h3>
-        </div>
-
         {/* Coming soon overlay for non-playable */}
         {!isPlayable && (
           <div className={styles.comingSoonOverlay} aria-hidden="true">

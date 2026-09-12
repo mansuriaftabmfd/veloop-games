@@ -3,7 +3,6 @@
   align-items: stretch;
   gap: 20px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   scrollbar-width: none;
   padding: 12px 0 24px;
   overscroll-behavior-inline: contain;
@@ -24,14 +23,19 @@
   width: 300px;
   min-width: 300px;
   max-width: 300px;
-  scroll-snap-align: start;
   box-sizing: border-box;
 }
 
 .track.isDragging {
   cursor: grabbing !important;
-  scroll-snap-type: none !important;
   scroll-behavior: auto !important;
+}
+
+.staticTrack {
+  overflow-x: visible;
+  cursor: default;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .track::-webkit-scrollbar { display: none; }
@@ -67,7 +71,6 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    scroll-snap-type: x mandatory;
     overflow-x: auto;
   }
 

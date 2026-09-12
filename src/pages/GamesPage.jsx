@@ -103,7 +103,7 @@ export default function GamesPage() {
         {/* ── DESKTOP: Carousel ── */}
         <div className={styles.desktopOnly}>
           {filtered.length > 0 ? (
-            <GamesCarousel games={filtered} />
+            <GamesCarousel games={filtered} category={category} />
           ) : (
             <div className={styles.emptyState}>
               <span className={styles.emptyIcon}>🎯</span>
