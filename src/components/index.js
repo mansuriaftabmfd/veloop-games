@@ -7,6 +7,8 @@ export { default as GameGuideModal } from './games/GameGuideModal.jsx'
 export { default as GameBottomNav } from './games/GameBottomNav.jsx'
 export { default as PlayNowButton } from './games/PlayNowButton.jsx'
 export { default as TokenCost } from './games/TokenCost.jsx'
+export { default as FeaturedHero } from './games/FeaturedHero.jsx'
+export { default as CategoryFilter } from './games/CategoryFilter.jsx'
 
 // Mini-game Implementations
 export { default as BladeMaster } from './gameplay/BladeMaster.jsx'

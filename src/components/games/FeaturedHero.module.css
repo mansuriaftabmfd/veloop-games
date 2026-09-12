@@ -1,0 +1,356 @@
+/* ── CINEMATIC FULL-BLEED FEATURED BANNER ── */
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  min-height: 240px;
+  max-height: 420px;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #090A16;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.6),
+    0 0 40px color-mix(in srgb, var(--accent, #FF6B35), transparent 82%);
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  user-select: none;
+  outline: none;
+}
+
+.hero:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent, #FF6B35), transparent 40%);
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.75),
+    0 0 60px color-mix(in srgb, var(--accent, #FF6B35), transparent 65%);
+}
+
+.hero:focus-visible {
+  border-color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.6);
+}
+
+/* ── ARTWORK WRAPPER ── */
+.artworkWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.bannerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 4s cubic-bezier(0.25, 1, 0.5, 1);
+  filter: brightness(0.95) contrast(1.05);
+}
+
+.hero:hover .bannerImg {
+  transform: scale(1.04);
+}
+
+/* Subtle gradient vignettes for text readability — NO opaque black blocks */
+.bottomVignette {
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(9, 10, 22, 0.45) 45%,
+    rgba(9, 10, 22, 0.88) 85%,
+    rgba(9, 10, 22, 0.96) 100%
+  );
+  pointer-events: none;
+}
+
+.topVignette {
+  position: absolute;
+  inset: 0 0 65%;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 10, 22, 0.6) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.rimGlow {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* ── TOP BADGES ── */
+.topBadges {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  pointer-events: none;
+}
+
+.kickerBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(9, 10, 22, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 107, 53, 0.45);
+  color: #FF8C60;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FF6B35;
+  box-shadow: 0 0 8px #FF6B35;
+  animation: pulseDotAnim 1.6s ease-in-out infinite;
+}
+@keyframes pulseDotAnim {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+.categoryBadge {
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(9, 10, 22, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.liveBadge {
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(0, 245, 160, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 245, 160, 0.45);
+  color: #00F5A0;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00F5A0;
+  box-shadow: 0 0 6px #00F5A0;
+}
+
+/* ── BOTTOM CONTENT OVERLAY ── */
+.bottomContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.titleArea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Game Title — High Contrast, Glowing, 100% Readable */
+.gameTitle {
+  margin: 0;
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(0, 0, 0, 0.8),
+    0 0 50px color-mix(in srgb, var(--accent, #FF6B35), transparent 50%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tokenPill,
+.bestPill,
+.diffPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 0.72rem;
+  font-weight: 800;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.tokenPill {
+  background: rgba(247, 201, 72, 0.16);
+  border: 1px solid rgba(247, 201, 72, 0.35);
+  color: var(--clr-gold);
+}
+
+.bestPill {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+}
+
+.diffPill {
+  background: rgba(0, 245, 160, 0.14);
+  border: 1px solid rgba(0, 245, 160, 0.3);
+  color: #00F5A0;
+}
+
+/* ── PLAY BUTTON ── */
+.playBtn {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--r-md);
+  padding: 13px 28px;
+  background: var(--grad-primary);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(255, 90, 34, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playBtn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    0 14px 35px rgba(255, 60, 172, 0.5),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.playBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btnShimmer {
+  position: absolute;
+  inset: -50% auto -50% -55%;
+  width: 40%;
+  transform: skewX(-22deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: bannerBtnShimmer 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+@keyframes bannerBtnShimmer {
+  0%   { left: -55%; }
+  60%, 100% { left: 130%; }
+}
+
+.btnText {
+  position: relative;
+  z-index: 1;
+}
+
+.lockedBtn {
+  background: var(--clr-card-2);
+  border: 1px solid var(--clr-border);
+  box-shadow: none;
+  cursor: default;
+  color: var(--clr-muted);
+}
+.lockedBtn:hover {
+  transform: none;
+  box-shadow: none;
+}
+.lockedBtn .btnShimmer {
+  display: none;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .hero {
+    aspect-ratio: 16 / 10;
+    min-height: 220px;
+    border-radius: var(--r-lg);
+  }
+
+  .topBadges {
+    top: 12px;
+    left: 12px;
+    gap: 6px;
+  }
+
+  .bottomContent {
+    padding: 14px 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .titleArea {
+    width: 100%;
+  }
+
+  .gameTitle {
+    font-size: 1.65rem;
+  }
+
+  .playBtn {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero { transition: none; }
+  .bannerImg { transition: none; }
+  .btnShimmer { animation: none; display: none; }
+  .pulseDot { animation: none; }
+}

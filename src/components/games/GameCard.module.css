@@ -1,7 +1,5 @@
 /* ── CARD ── */
 .card {
-  flex: 0 0 clamp(280px, 24vw, 340px);
-  scroll-snap-align: start;
   background: var(--clr-card);
   border: 1px solid var(--clr-border);
   border-radius: var(--r-xl);
@@ -12,7 +10,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  min-width: 0;
+  width: 100%;
   max-width: 100%;
   user-select: none;
   -webkit-user-select: none;
@@ -27,7 +25,7 @@
     0 0 35px color-mix(in srgb, var(--accent, #FF6B35), transparent 75%);
 }
 
-/* ── ARTWORK (Strict aspect ratio + absolute image so cards never mismatch) ── */
+/* ── ARTWORK ── */
 .artworkWrap {
   position: relative;
   width: 100%;
@@ -62,8 +60,8 @@
 /* Bottom gradient overlay */
 .artworkOverlay {
   position: absolute;
-  inset: 40% 0 0;
-  background: linear-gradient(to bottom, transparent, rgba(13, 14, 26, 0.9));
+  inset: 30% 0 0;
+  background: linear-gradient(to bottom, transparent, rgba(13, 14, 26, 0.95));
   pointer-events: none;
   z-index: 1;
 }
@@ -129,10 +127,43 @@
   border: 1px solid rgba(255, 107, 53, 0.35);
 }
 
+/* Difficulty badge */
+.diffBadge {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+  border: 1px solid;
+}
+
+.diffEasy {
+  background: rgba(0, 245, 160, 0.15);
+  border-color: rgba(0, 245, 160, 0.3);
+  color: #00F5A0;
+}
+.diffMedium {
+  background: rgba(247, 201, 72, 0.15);
+  border-color: rgba(247, 201, 72, 0.3);
+  color: #F7C948;
+}
+.diffHard {
+  background: rgba(255, 80, 80, 0.15);
+  border-color: rgba(255, 80, 80, 0.3);
+  color: #FF6060;
+}
+
 /* LIVE / COMING SOON badge */
 .statusBadge {
   position: absolute;
-  bottom: 10px;
+  bottom: 42px;
   right: 10px;
   z-index: 2;
   padding: 4px 9px;
@@ -168,6 +199,30 @@
   50% { opacity: 0.5; transform: scale(0.75); }
 }
 
+/* ── GAME TITLE ON ARTWORK ── */
+.artworkTitle {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.artworkTitle h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.15;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Coming soon frosted overlay */
 .comingSoonOverlay {
   position: absolute;
@@ -195,13 +250,11 @@
 
 /* ── ACTION AREA ── */
 .actionArea {
-  height: 82px;
-  flex-shrink: 0;
-  padding: 0 1.15rem;
+  flex: 1;
+  padding: 14px 16px 16px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.85rem;
+  flex-direction: column;
+  gap: 12px;
   background: linear-gradient(180deg, var(--clr-card), var(--clr-surface));
   border-top: 1px solid var(--clr-border);
   overflow: hidden;
@@ -215,13 +268,18 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
   gap: 6px;
   box-sizing: border-box;
 }
 
-.actionArea h3 {
+.gameInfoTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.actionArea h4 {
   margin: 0;
   font-size: 1.05rem;
   color: var(--clr-text);
@@ -232,65 +290,51 @@
   line-height: 1.2;
 }
 
-/* ── TABLET BREAKPOINT (768px - 1199px) ── */
-@media (max-width: 1199px) and (min-width: 768px) {
-  .card {
-    flex: 0 0 clamp(280px, 36vw, 350px);
-  }
-  .artworkWrap {
-    aspect-ratio: 16 / 10;
-  }
-  .actionArea {
-    height: 82px;
-  }
+.bestScore {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  background: rgba(247, 201, 72, 0.12);
+  border: 1px solid rgba(247, 201, 72, 0.25);
+  border-radius: var(--r-pill);
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--clr-gold);
+  white-space: nowrap;
 }
 
-/* ── MOBILE BREAKPOINT (< 768px) ── */
+.gameDesc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--clr-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gameMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.tokenCost {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--clr-gold);
+  padding: 3px 8px;
+  background: rgba(247, 201, 72, 0.1);
+  border: 1px solid rgba(247, 201, 72, 0.2);
+  border-radius: var(--r-pill);
+}
+
+/* ── RESPONSIVE ── */
+/* GameCard is used in the desktop carousel; MobileGameCard handles mobile */
 @media (max-width: 767px) {
   .card {
-    flex: 0 0 100%;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    scroll-snap-align: start;
-    border-radius: 20px;
-  }
-
-  .artworkWrap {
-    aspect-ratio: 16 / 10;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .actionArea {
-    height: auto;
-    min-height: 112px;
-    padding: 12px 14px;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: space-between;
-    gap: 10px;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .gameInfo {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 100%;
-    flex: 0 0 auto;
-    gap: 8px;
-    box-sizing: border-box;
-  }
-
-  .actionArea h3 {
-    font-size: clamp(0.95rem, 4vw, 1.05rem);
-    max-width: 60%;
-    margin: 0;
+    border-radius: 16px;
   }
 }
 

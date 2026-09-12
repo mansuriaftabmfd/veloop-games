@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import FeaturedHero from '../components/games/FeaturedHero.jsx'
+import CategoryFilter from '../components/games/CategoryFilter.jsx'
+import MobileGameCard from '../components/games/MobileGameCard.jsx'
 import GamesCarousel from '../components/games/GamesCarousel.jsx'
 import games from '../data/gamesData.js'
 import { useGameEconomy } from '../context/GameEconomyContext.jsx'
@@ -6,7 +10,9 @@ import styles from './GamesPage.module.css'
 
 export default function GamesPage() {
   const { state, resetDemo } = useGameEconomy()
+  const navigate = useNavigate()
   const [devReset, setDevReset] = useState(0)
+  const [category, setCategory] = useState('All')
 
   // Hidden dev reset: click brand logo 5 times
   const handleBrandClick = () => {
@@ -17,6 +23,20 @@ export default function GamesPage() {
       setDevReset(0)
     }
   }
+
+  // Dynamic stats
+  const totalGames = games.length
+  const playableCount = games.filter((g) => g.playable).length
+  const featured = useMemo(() => games.find((g) => g.featured && g.playable) || games[0], [])
+
+  // Filtered games (exclude the featured game from grid)
+  const filtered = useMemo(() => {
+    let list = games.filter((g) => g.id !== featured.id)
+    if (category !== 'All') {
+      list = list.filter((g) => g.category === category)
+    }
+    return list
+  }, [category, featured.id])
 
   return (
     <main className={styles.page}>
@@ -68,19 +88,70 @@ export default function GamesPage() {
           </div>
         </div>
 
-        {/* ── CAROUSEL ── */}
-        <GamesCarousel games={games} />
+        {/* ── FEATURED HERO ── */}
+        <FeaturedHero game={featured} />
+
+        {/* ── CATEGORY FILTER ── */}
+        <div className={styles.filterSection}>
+          <h2 className={styles.sectionTitle}>
+            <span className={styles.sectionTitleIcon}>🎮</span>
+            Explore Games
+          </h2>
+          <CategoryFilter games={games} active={category} onChange={setCategory} />
+        </div>
+
+        {/* ── DESKTOP: Carousel ── */}
+        <div className={styles.desktopOnly}>
+          {filtered.length > 0 ? (
+            <GamesCarousel games={filtered} />
+          ) : (
+            <div className={styles.emptyState}>
+              <span className={styles.emptyIcon}>🎯</span>
+              <p>No games in this category yet.</p>
+              <button
+                type="button"
+                className={styles.emptyBtn}
+                onClick={() => setCategory('All')}
+              >
+                Show All Games
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ── MOBILE: 2-column grid ── */}
+        <div className={styles.mobileOnly}>
+          {filtered.length > 0 ? (
+            <div className={styles.mobileGrid}>
+              {filtered.map((game) => (
+                <MobileGameCard key={game.id} game={game} />
+              ))}
+            </div>
+          ) : (
+            <div className={styles.emptyState}>
+              <span className={styles.emptyIcon}>🎯</span>
+              <p>No games in this category yet.</p>
+              <button
+                type="button"
+                className={styles.emptyBtn}
+                onClick={() => setCategory('All')}
+              >
+                Show All Games
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* ── STATS ── */}
         <div className={styles.statsGrid}>
           <div className={styles.statCard}>
             <span className={styles.statIcon}>🎮</span>
-            <strong>13</strong>
-            <span>Game Banners</span>
+            <strong>{totalGames}</strong>
+            <span>Total Games</span>
           </div>
           <div className={styles.statCard}>
             <span className={styles.statIcon}>⚡</span>
-            <strong>2</strong>
+            <strong>{playableCount}</strong>
             <span>Playable Now</span>
           </div>
           <div className={styles.statCard}>
@@ -93,6 +164,21 @@ export default function GamesPage() {
             <strong>{state.gameCoins}</strong>
             <span>Your Coins</span>
           </div>
+        </div>
+
+        {/* ── REDEEM CTA ── */}
+        <div className={styles.redeemBanner}>
+          <div>
+            <h3>💎 Got Game Coins?</h3>
+            <p>Trade them for VEs, SVEs, Gems, Spins and more VELOOP rewards.</p>
+          </div>
+          <button
+            type="button"
+            className={styles.redeemBtn}
+            onClick={() => navigate('/redeem')}
+          >
+            Go to Redeem →
+          </button>
         </div>
       </section>
     </main>

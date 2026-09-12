@@ -1,0 +1,273 @@
+/* ── MOBILE GAME CARD ── */
+/* Used only in the 2-column mobile grid. Compact, image-first design. */
+
+.card {
+  background: var(--clr-card);
+  border: 1px solid var(--clr-border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.card:active {
+  transform: scale(0.97);
+}
+
+/* ── ARTWORK ── */
+.artwork {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--clr-card-2);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.artwork img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.artwork img.loaded { opacity: 1; }
+
+/* Skeleton */
+.skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    var(--clr-card) 28%,
+    var(--clr-card-2) 45%,
+    var(--clr-card) 62%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* Fallback */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  color: var(--clr-muted);
+  background: var(--clr-card-2);
+}
+
+/* Bottom gradient */
+.gradient {
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(10, 11, 20, 0.92) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── TOP ROW: category + badge ── */
+.topRow {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  right: 7px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.category {
+  background: rgba(10, 11, 20, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 7px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.badge {
+  background: rgba(255, 107, 53, 0.22);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 107, 53, 0.35);
+  border-radius: 20px;
+  color: #FF8C60;
+  font-size: 0.55rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 3px 7px;
+  white-space: nowrap;
+}
+
+/* ── LIVE / SOON STATUS ── */
+.status {
+  position: absolute;
+  bottom: 7px;
+  right: 7px;
+  z-index: 2;
+  padding: 3px 7px;
+  border-radius: 20px;
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.live {
+  background: rgba(0, 245, 160, 0.15);
+  border: 1px solid rgba(0, 245, 160, 0.35);
+  color: #00F5A0;
+}
+.soon {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.liveDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #00F5A0;
+  display: inline-block;
+  animation: livePulse 1.5s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Coming soon dim */
+.lockedOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 11, 20, 0.45);
+  z-index: 1;
+}
+
+/* ── INFO AREA ── */
+.info {
+  padding: 8px 9px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--clr-card);
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--clr-text);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cost {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--clr-gold, #F7C948);
+  background: rgba(247, 201, 72, 0.1);
+  border: 1px solid rgba(247, 201, 72, 0.2);
+  border-radius: 20px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+
+/* ── BUTTON ── */
+.btn {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 6px;
+  background: var(--grad-primary, linear-gradient(135deg, #FF5A22, #FF3CAC));
+  color: white;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.btnSoon {
+  background: var(--clr-card-2, rgba(255,255,255,0.06));
+  color: var(--clr-muted, rgba(255,255,255,0.45));
+  cursor: default;
+}
+
+.btnDisabled {
+  background: var(--clr-card-2, rgba(255,255,255,0.06));
+  color: var(--clr-muted, rgba(255,255,255,0.45));
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ── ULTRA-SMALL (320px) ── */
+@media (max-width: 340px) {
+  .artwork {
+    aspect-ratio: 1 / 1;
+  }
+  .name {
+    font-size: 0.74rem;
+  }
+  .btn {
+    font-size: 0.66rem;
+    padding: 6px 4px;
+  }
+  .info {
+    padding: 6px 7px 8px;
+    gap: 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  .skeleton { animation: none; }
+  .liveDot { animation: none; }
+}

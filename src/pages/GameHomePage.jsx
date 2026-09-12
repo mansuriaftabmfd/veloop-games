@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import games from '../data/gamesData.js'
 import { useGameEconomy } from '../context/GameEconomyContext.jsx'
+import { getBestScore } from '../utils/highScores.js'
 
 import GameHeader from '../components/games/GameHeader.jsx'
 import GameBottomNav from '../components/games/GameBottomNav.jsx'
@@ -16,18 +17,21 @@ export default function GameHomePage() {
 
   const game = useMemo(() => games.find((item) => item.slug === slug), [slug])
 
-  const { state, spendTokens, addTokens, markGuideSeen } = useGameEconomy()
+  const { state, spendTokens, markGuideSeen } = useGameEconomy()
 
   const [guideOpen, setGuideOpen] = useState(false)
   const [requiredGuide, setRequiredGuide] = useState(false)
   const [message, setMessage] = useState('')
   const [messageType, setMessageType] = useState('warn') // 'warn' | 'error'
 
+  const bestScore = game ? getBestScore(game.slug) : 0
+
   if (!game) {
     return (
       <div className={styles.missing}>
         <span>🎮</span>
         <p>Game not found.</p>
+        <Link to="/games" className={styles.missingLink}>← Back to Games</Link>
       </div>
     )
   }
@@ -78,17 +82,30 @@ export default function GameHomePage() {
     setRequiredGuide(false)
   }
 
+  // Star rating helper
+  const getDifficultyStars = (diff) => {
+    switch (diff?.toLowerCase()) {
+      case 'easy':
+        return '⭐ Easy'
+      case 'hard':
+        return '⭐⭐⭐ Hard'
+      case 'medium':
+      default:
+        return '⭐⭐ Medium'
+    }
+  }
+
   return (
-    <main className={styles.page} style={{ '--accent': game.accent }}>
+    <main className={styles.page} style={{ '--accent': game.accent || '#FF6B35' }}>
       {/* Accent glow blob */}
       <div className={styles.accentBlob} aria-hidden="true" />
 
       <div className={styles.shell}>
         <GameHeader />
 
-        {/* ── HERO ── */}
+        {/* ── HERO BANNER ── */}
         <section className={styles.hero}>
-          {/* Left: Artwork */}
+          {/* Left: Cinematic Artwork Poster */}
           <div className={styles.artwork}>
             <img src={game.image} alt={`${game.name} artwork`} />
             <div className={styles.artworkGradient} aria-hidden="true" />
@@ -97,7 +114,7 @@ export default function GameHomePage() {
             {isPlayable ? (
               <div className={`${styles.artBadge} ${styles.liveBadge}`}>
                 <span className={styles.liveDot} aria-hidden="true" />
-                LIVE
+                PLAYABLE NOW
               </div>
             ) : (
               <div className={`${styles.artBadge} ${styles.soonBadge}`}>
@@ -106,20 +123,51 @@ export default function GameHomePage() {
             )}
           </div>
 
-          {/* Right: Info card */}
+          {/* Right: Info Card with prominent Title & Meta */}
           <div className={styles.infoCard}>
-            <span className={styles.category}>{game.category || 'Game'}</span>
-            <h1>{game.name}</h1>
+            <div className={styles.infoBadges}>
+              <span className={styles.category}>{game.category || 'Arcade'}</span>
+              {game.difficulty && (
+                <span className={`${styles.diffBadge} ${styles[`diff${game.difficulty}`]}`}>
+                  {getDifficultyStars(game.difficulty)}
+                </span>
+              )}
+            </div>
+
+            <h1 className={styles.heroTitle}>
+              <span className={styles.heroTitleGrad}>{game.name}</span>
+            </h1>
+
             <p className={styles.desc}>
-              {game.description || 'A new VELOOP challenge is waiting for you.'}
+              {game.description || 'A high-intensity VELOOP arcade experience. Test your skills, beat personal records, and earn Game Coins!'}
             </p>
 
-            {/* Entry fee */}
-            <div className={styles.entryFee}>
-              <span className={styles.entryIcon}>🪙</span>
-              <div>
-                <small>ENTRY FEE</small>
-                <strong>20 Tokens</strong>
+            {/* Stats Plaque */}
+            <div className={styles.heroStatsPills}>
+              {bestScore > 0 && (
+                <div className={`${styles.statPill} ${styles.bestScorePill}`}>
+                  <span className={styles.statPillIcon}>🏆</span>
+                  <div>
+                    <small>PERSONAL BEST</small>
+                    <strong>{bestScore.toLocaleString()} PTS</strong>
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.statPill}>
+                <span className={styles.statPillIcon}>🪙</span>
+                <div>
+                  <small>ENTRY FEE</small>
+                  <strong>{game.cost} Tokens</strong>
+                </div>
+              </div>
+
+              <div className={`${styles.statPill} ${styles.rewardPill}`}>
+                <span className={styles.statPillIcon}>💎</span>
+                <div>
+                  <small>EARN</small>
+                  <strong>Game Coins</strong>
+                </div>
               </div>
             </div>
 
@@ -129,8 +177,12 @@ export default function GameHomePage() {
                 className={`${styles.playBtn} ${!isPlayable ? styles.playBtnSoon : ''}`}
                 onClick={start}
                 type="button"
+                aria-label={isPlayable ? `Play ${game.name}` : `${game.name} is coming soon`}
               >
-                {isPlayable ? '▶ Play Now' : '🔒 Coming Soon'}
+                <span className={styles.playBtnShimmer} aria-hidden="true" />
+                <span className={styles.playBtnText}>
+                  {isPlayable ? '▶ Play Now' : '🔒 Coming Soon'}
+                </span>
               </button>
 
               {game.guide && isPlayable && (
@@ -139,12 +191,12 @@ export default function GameHomePage() {
                   onClick={() => { setRequiredGuide(false); setGuideOpen(true) }}
                   type="button"
                 >
-                  How to Play
+                  📖 How to Play
                 </button>
               )}
             </div>
 
-            {/* Message */}
+            {/* Notification messages */}
             {message && (
               <div
                 className={`${styles.notice} ${styles[messageType]}`}
@@ -152,7 +204,7 @@ export default function GameHomePage() {
               >
                 <div>{message}</div>
                 {state.tokens < game.cost && (
-                  <Link to="/games/redeem" className={styles.claimBtn}>
+                  <Link to="/redeem" className={styles.claimBtn}>
                     💎 Go to Redemption Center
                   </Link>
                 )}
@@ -161,30 +213,50 @@ export default function GameHomePage() {
 
             {/* Token balance reminder */}
             <div className={styles.tokenBalance}>
-              <span>Your balance:</span>
-              <strong>🪙 {state.tokens} Tokens</strong>
+              <span>Your Balances:</span>
+              <strong className={styles.balanceHighlight}>🪙 {state.tokens} Tokens</strong>
               <span>·</span>
-              <strong>💎 {state.gameCoins} Coins</strong>
+              <strong className={styles.balanceCoinHighlight}>💎 {state.gameCoins} Coins</strong>
             </div>
           </div>
         </section>
+
+        {/* ── GAME INSTRUCTIONS PREVIEW ── */}
+        {game.guide && (
+          <section className={styles.guidePreview}>
+            <div className={styles.guidePreviewHeader}>
+              <h3 className={styles.guidePreviewTitle}>
+                <span>📖</span> Quick Rules & Gameplay Guide
+              </h3>
+              <span className={styles.guidePreviewTag}>Everything you need to master {game.name}</span>
+            </div>
+            <div className={styles.guideSteps}>
+              {game.guide.map((step, i) => (
+                <div key={step} className={styles.guideStep}>
+                  <span className={styles.guideStepNum}>{i + 1}</span>
+                  <span className={styles.guideStepText}>{step}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ── FEATURES ── */}
         <section className={styles.features}>
           <div className={styles.featureCard}>
             <span className={styles.featureIcon}>💎</span>
-            <b>Game Coins</b>
-            <span>Rewards flow into one centralized balance.</span>
+            <b>Centralized Rewards</b>
+            <span>Game Coins flow directly into your VELOOP account balance.</span>
           </div>
           <div className={styles.featureCard}>
             <span className={styles.featureIcon}>⚡</span>
-            <b>Revive</b>
-            <span>Both playable games support a full revive flow.</span>
+            <b>Instant Revive Flow</b>
+            <span>Continue your streak if you make a mistake and claim bigger rewards.</span>
           </div>
           <div className={styles.featureCard}>
             <span className={styles.featureIcon}>📱</span>
-            <b>Responsive</b>
-            <span>Built for touch, mouse, tablet and desktop.</span>
+            <b>Arcade Quality</b>
+            <span>Responsive touch, keyboard, and mouse controls on any device.</span>
           </div>
         </section>
 

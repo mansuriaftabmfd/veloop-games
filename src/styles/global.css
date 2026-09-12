@@ -43,6 +43,11 @@
   --shadow-card:   0 20px 60px rgba(0, 0, 0, 0.5);
   --shadow-glow:   0 0 30px rgba(255, 90, 34, 0.25);
   --shadow-neon:   0 0 24px rgba(0, 245, 160, 0.3);
+
+  /* Transitions */
+  --transition-fast: 0.18s ease;
+  --transition-med:  0.25s ease;
+  --transition-slow: 0.4s ease;
 }
 
 /* ── RESET ─────────────────────────────── */
@@ -93,6 +98,27 @@ button:focus-visible, a:focus-visible {
 /* ── SELECTION ─────────────────────────────── */
 ::selection { background: rgba(255, 90, 34, 0.3); color: var(--clr-text); }
 
+/* ── GLOBAL ANIMATION UTILITIES ─────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmerGlobal {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
 /* ── REDUCED MOTION ─────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -100,5 +126,6 @@ button:focus-visible, a:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

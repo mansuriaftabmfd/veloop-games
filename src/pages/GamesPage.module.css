@@ -43,7 +43,7 @@
 .shell {
   position: relative;
   z-index: 1;
-  width: min(1480px, calc(100% - 32px));
+  width: min(1280px, calc(100% - 32px));
   margin: 0 auto;
   box-sizing: border-box;
 }
@@ -190,12 +190,105 @@
   overflow-wrap: break-word;
 }
 
+/* ── FILTER SECTION ── */
+.filterSection {
+  margin-top: 48px;
+  margin-bottom: 20px;
+}
+
+.sectionTitle {
+  margin: 0 0 14px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--clr-text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sectionTitleIcon {
+  font-size: 1.3rem;
+}
+
+/* ── GAME GRID (legacy / desktop fallback) ── */
+.gameGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  animation: gridFadeIn 0.4s ease both;
+}
+
+@keyframes gridFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE TOGGLE ── */
+/* Desktop: show carousel, hide mobile grid */
+.desktopOnly { display: block; }
+.mobileOnly  { display: none;  }
+
+/* ── MOBILE 2-COLUMN GRID ── */
+.mobileGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  animation: gridFadeIn 0.4s ease both;
+}
+
+/* ── EMPTY STATE ── */
+.emptyState {
+  padding: 60px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: gridFadeIn 0.4s ease both;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  opacity: 0.6;
+}
+
+.emptyState p {
+  color: var(--clr-muted);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.emptyBtn {
+  border: 1px solid var(--clr-border-hi);
+  background: var(--clr-card);
+  color: var(--clr-text);
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.88rem;
+  padding: 10px 24px;
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.emptyBtn:hover {
+  background: var(--clr-card-2);
+  border-color: var(--clr-primary);
+  transform: translateY(-1px);
+}
+
 /* ── STATS ── */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 40px;
+  margin-top: 48px;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -213,6 +306,7 @@
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  backdrop-filter: blur(8px);
 }
 .statCard:hover {
   border-color: var(--clr-border-hi);
@@ -245,6 +339,59 @@
   text-overflow: ellipsis;
 }
 
+/* ── REDEEM BANNER ── */
+.redeemBanner {
+  margin-top: 36px;
+  padding: 24px 28px;
+  background: var(--clr-card);
+  border: 1px solid rgba(0, 245, 160, 0.2);
+  border-radius: var(--r-xl);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.redeemBanner:hover {
+  border-color: rgba(0, 245, 160, 0.35);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 245, 160, 0.1);
+}
+.redeemBanner h3 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--clr-text);
+}
+.redeemBanner p {
+  margin: 0;
+  color: var(--clr-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.redeemBtn {
+  flex-shrink: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  padding: 12px 24px;
+  background: var(--grad-neon);
+  color: #0D0E1A;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 0.92rem;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 245, 160, 0.3);
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+.redeemBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 245, 160, 0.4);
+}
+.redeemBtn:active {
+  transform: scale(0.97);
+}
+
 /* ── TABLET BREAKPOINT (768px - 1199px) ── */
 @media (max-width: 1199px) and (min-width: 768px) {
   .shell {
@@ -260,6 +407,10 @@
   .heading {
     padding: 32px 0 22px;
   }
+  .gameGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 }
 
 /* ── MOBILE BREAKPOINT (< 768px) ── */
@@ -268,82 +419,109 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 16px;
+    padding: 12px 12px 0;
     margin: 0 auto;
     overflow-x: hidden;
   }
 
   .topbar {
     min-height: auto;
-    padding: 4px 0 12px;
+    padding: 4px 0 10px;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
   }
 
   .brand {
-    font-size: 0.95rem;
-    gap: 8px;
+    font-size: 0.88rem;
+    gap: 7px;
+    min-width: 0;
   }
 
   .brandIcon {
-    width: 34px;
-    height: 34px;
-    font-size: 1rem;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    border-radius: 9px;
+    flex-shrink: 0;
+  }
+
+  /* brand text truncation prevention */
+  .brand span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 
   .wallet {
-    flex-direction: column;
+    flex-direction: row;
     gap: 6px;
-    align-items: flex-end;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: flex-end;
   }
 
   .walletPill {
-    width: 144px;
-    min-width: 144px;
+    min-width: 0;
+    width: auto;
     box-sizing: border-box;
-    justify-content: flex-start;
-    padding: 6px 12px;
-    gap: 6px;
+    justify-content: center;
+    padding: 5px 9px;
+    gap: 4px;
+    flex-shrink: 0;
   }
 
-  .walletIcon { font-size: 0.9rem; }
-  .walletVal  { font-size: 0.88rem; }
-  .walletLabel { font-size: 0.68rem; }
+  .walletIcon { font-size: 0.82rem; }
+  .walletVal  { font-size: 0.8rem; }
+  .walletLabel { display: none; }
 
   .heading {
-    padding: 20px 0 18px;
+    padding: 16px 0 14px;
   }
 
   .badge {
-    padding: 4px 11px;
-    font-size: 0.66rem;
-    margin-bottom: 10px;
-  }
-
-  .headline {
-    font-size: clamp(1.9rem, 7.5vw, 2.7rem);
+    padding: 4px 10px;
+    font-size: 0.64rem;
     margin-bottom: 8px;
   }
 
-  .sub {
-    font-size: 0.92rem;
-    line-height: 1.48;
+  .headline {
+    font-size: clamp(1.7rem, 7vw, 2.4rem);
+    margin-bottom: 6px;
   }
 
-  /* 2 columns on mobile, exactly as required */
+  .sub {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .filterSection {
+    margin-top: 20px;
+    margin-bottom: 12px;
+  }
+
+  .sectionTitle {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  /* ── LAYOUT SWITCH: hide carousel, show 2-col grid ── */
+  .desktopOnly { display: none; }
+  .mobileOnly  { display: block; }
+
+  /* 2 columns on mobile for stats */
   .statsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 24px;
+    gap: 8px;
+    margin-top: 20px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
   }
 
   .statCard {
-    padding: 14px 12px;
+    padding: 12px 10px;
     border-radius: var(--r-md);
     min-width: 0;
     width: 100%;
@@ -351,14 +529,32 @@
   }
 
   .statCard strong {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .statCard span {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
+  }
+
+  .redeemBanner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .redeemBtn {
+    width: 100%;
+    text-align: center;
   }
 
   .blob1, .blob2 {
     display: none;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob1, .blob2 { animation: none; }
+  .gameGrid { animation: none; }
+  .mobileGrid { animation: none; }
 }

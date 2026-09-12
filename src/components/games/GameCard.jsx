@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameEconomy } from '../../context/GameEconomyContext.jsx'
+import { getBestScore } from '../../utils/highScores.js'
 import PlayNowButton from './PlayNowButton.jsx'
-import TokenCost from './TokenCost.jsx'
 import styles from './GameCard.module.css'
 
 export default function GameCard({ game, ariaHidden }) {
@@ -12,6 +12,7 @@ export default function GameCard({ game, ariaHidden }) {
   const [failed, setFailed] = useState(false)
   const disabled = state.tokens < game.cost
   const isPlayable = !!game.playable
+  const best = getBestScore(game.slug)
 
   return (
     <article
@@ -52,6 +53,13 @@ export default function GameCard({ game, ariaHidden }) {
           )}
         </div>
 
+        {/* Difficulty badge */}
+        {game.difficulty && (
+          <div className={`${styles.diffBadge} ${styles[`diff${game.difficulty}`]}`}>
+            {game.difficulty}
+          </div>
+        )}
+
         {/* LIVE / COMING SOON badge */}
         <div className={`${styles.statusBadge} ${isPlayable ? styles.live : styles.soon}`}>
           {isPlayable ? (
@@ -59,6 +67,11 @@ export default function GameCard({ game, ariaHidden }) {
           ) : (
             <>🔒 Coming Soon</>
           )}
+        </div>
+
+        {/* Game title overlay on artwork */}
+        <div className={styles.artworkTitle}>
+          <h3>{game.name}</h3>
         </div>
 
         {/* Coming soon overlay for non-playable */}
@@ -73,8 +86,18 @@ export default function GameCard({ game, ariaHidden }) {
       {/* ── ACTION AREA ── */}
       <div className={styles.actionArea}>
         <div className={styles.gameInfo}>
-          <h3>{game.name}</h3>
-          <TokenCost amount={game.cost} compact />
+          <div className={styles.gameInfoTop}>
+            <h4>{game.name}</h4>
+            {best > 0 && (
+              <span className={styles.bestScore}>🏆 {best}</span>
+            )}
+          </div>
+          {game.description && (
+            <p className={styles.gameDesc}>{game.description}</p>
+          )}
+          <div className={styles.gameMeta}>
+            <span className={styles.tokenCost}>🪙 {game.cost} Tokens</span>
+          </div>
         </div>
         <PlayNowButton
           disabled={disabled}

@@ -9,6 +9,8 @@ const games = [
     playable: true,
     category: 'Reaction',
     badge: 'New',
+    featured: true,
+    difficulty: 'Medium',
     description: 'Aim, throw knives, hit the target and become the Blade Master.',
     guide: [
       'Tap or click the target to throw your knife.',
@@ -29,6 +31,8 @@ const games = [
     playable: true,
     category: 'Puzzle',
     badge: 'New',
+    featured: true,
+    difficulty: 'Hard',
     description: 'Twist, remove and solve mechanical puzzles to become a master.',
     guide: [
       'Study the nuts, bolts and pieces on the board.',
@@ -48,6 +52,8 @@ const games = [
     currency: 'Tokens',
     category: 'Arcade',
     badge: 'New',
+    difficulty: 'Easy',
+    description: 'Bowl strikes and spares in this fast-paced arcade bowling game.',
     accent: '#3977ff',
   },
 
@@ -59,6 +65,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Puzzle',
+    difficulty: 'Medium',
+    description: 'Match and crush colourful blocks before the board fills up.',
     accent: '#8f5ce6',
   },
 
@@ -70,6 +78,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Action',
+    difficulty: 'Hard',
+    description: 'Slash through flying objects at lightning speed for massive combos.',
     accent: '#d86c3a',
   },
 
@@ -81,6 +91,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Adventure',
+    difficulty: 'Hard',
+    description: 'Explore the galaxy, battle alien foes and collect cosmic rewards.',
     accent: '#5368d8',
   },
 
@@ -92,6 +104,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Strategy',
+    difficulty: 'Medium',
+    description: 'Outsmart your opponent in this quirky turn-based strategy game.',
     accent: '#4d86d9',
   },
 
@@ -103,6 +117,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Puzzle',
+    difficulty: 'Easy',
+    description: 'Find hidden words in the grid before time runs out.',
     accent: '#7353c9',
   },
 
@@ -114,6 +130,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Reaction',
+    difficulty: 'Easy',
+    description: 'Pop colourful bubbles in the right order for chain reactions.',
     accent: '#4d86d9',
   },
 
@@ -125,6 +143,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Puzzle',
+    difficulty: 'Medium',
+    description: 'Drag and merge tiles to discover new elements and clear the board.',
     accent: '#c96f35',
   },
 
@@ -136,6 +156,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Arcade',
+    difficulty: 'Easy',
+    description: 'Guide your worm through obstacles and grow as long as you can.',
     accent: '#3b9b63',
   },
 
@@ -147,6 +169,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Skill',
+    difficulty: 'Medium',
+    description: 'Direct water flow through pipes to fill every container perfectly.',
     accent: '#318eb5',
   },
 
@@ -158,6 +182,8 @@ const games = [
     cost: 20,
     currency: 'Tokens',
     category: 'Strategy',
+    difficulty: 'Hard',
+    description: 'Build your army, defend your realm and conquer rival kingdoms.',
     accent: '#7b55c7',
   },
 ]

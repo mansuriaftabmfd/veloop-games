@@ -18,6 +18,16 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* Each game card inside the carousel must have a fixed width */
+.track > * {
+  flex: 0 0 300px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  scroll-snap-align: start;
+  box-sizing: border-box;
+}
+
 .track.isDragging {
   cursor: grabbing !important;
   scroll-snap-type: none !important;
@@ -39,17 +49,32 @@
     max-width: 100%;
     box-sizing: border-box;
   }
+
+  /* Slightly smaller cards on tablet */
+  .track > * {
+    flex: 0 0 260px;
+    width: 260px;
+    min-width: 260px;
+    max-width: 260px;
+  }
 }
 
 @media (max-width: 767px) {
+  /* Carousel is hidden on mobile — MobileGameCard grid is used instead */
   .track {
-    gap: 0;
-    padding: 4px 0 16px;
-    margin: 0;
+    gap: 16px;
+    padding: 10px 0 20px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     scroll-snap-type: x mandatory;
     overflow-x: auto;
+  }
+
+  .track > * {
+    flex: 0 0 240px;
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
   }
 }
